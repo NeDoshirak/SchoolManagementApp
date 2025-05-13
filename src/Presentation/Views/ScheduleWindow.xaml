@@ -3,27 +3,89 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="clr-namespace:Presentation.ViewModels"
         Title="Расписание" Height="600" Width="800">
-    <Grid Margin="10">
+    <Window.Resources>
+        <!-- Цвета -->
+        <SolidColorBrush x:Key="WindowBackground" Color="#F8F8F8"/>
+        <SolidColorBrush x:Key="PrimaryButtonBackground" Color="#0078D4"/>
+        <SolidColorBrush x:Key="PrimaryButtonForeground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="EditButtonBackground" Color="#D0D0D0"/>
+        <SolidColorBrush x:Key="DeleteButtonBackground" Color="#D13438"/>
+        <SolidColorBrush x:Key="DeleteButtonForeground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="HeaderBackground" Color="#E6E6E6"/>
+
+        <!-- Стили -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryButtonForeground}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="EditButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource EditButtonBackground}"/>
+            <Setter Property="Foreground" Value="#333333"/>
+        </Style>
+
+        <Style x:Key="DeleteButtonStyle" TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource DeleteButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource DeleteButtonForeground}"/>
+        </Style>
+
+        <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="ComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+
+        <Style x:Key="DataGridStyle" TargetType="DataGrid">
+            <Setter Property="Background" Value="{StaticResource WindowBackground}"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="RowBackground" Value="#FFFFFF"/>
+            <Setter Property="AlternatingRowBackground" Value="#F5F6F5"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#E0E0E0"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#E0E0E0"/>
+        </Style>
+
+        <Style x:Key="DataGridColumnHeaderStyle" TargetType="DataGridColumnHeader">
+            <Setter Property="Background" Value="{StaticResource HeaderBackground}"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderThickness" Value="0,0,1,1"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12" Background="{StaticResource WindowBackground}">
         <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <!-- Фильтры -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,10">
-            <TextBlock Text="Класс:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,5,0" />
-            <ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="FullName" Width="150" Margin="0,0,10,0" />
-            <TextBlock Text="Четверть:" FontWeight="Bold" VerticalAlignment="Center" Margin="0,0,5,0" />
-            <ComboBox ItemsSource="{Binding Quarters}" SelectedItem="{Binding SelectedQuarter, UpdateSourceTrigger=PropertyChanged}" Width="150">
+        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="0,0,0,8">
+            <TextBlock Text="Класс:" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,4,0"/>
+            <ComboBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass, UpdateSourceTrigger=PropertyChanged}" DisplayMemberPath="FullName" Width="150" Style="{StaticResource ComboBoxStyle}"/>
+            <TextBlock Text="Четверть:" Style="{StaticResource HeaderTextBlockStyle}" Margin="0,0,4,0"/>
+            <ComboBox ItemsSource="{Binding Quarters}" SelectedItem="{Binding SelectedQuarter, UpdateSourceTrigger=PropertyChanged}" Width="150" Style="{StaticResource ComboBoxStyle}">
                 <ComboBox.ItemTemplate>
                     <DataTemplate>
                         <TextBlock>
                             <TextBlock.Text>
                                 <MultiBinding Converter="{StaticResource QuarterDisplayConverter}">
-                                    <Binding Path="QuarterNumber" />
-                                    <Binding Path="AcademicYear" />
+                                    <Binding Path="QuarterNumber"/>
+                                    <Binding Path="AcademicYear"/>
                                 </MultiBinding>
                             </TextBlock.Text>
                         </TextBlock>
@@ -33,44 +95,44 @@
         </StackPanel>
 
         <!-- Заголовок -->
-        <TextBlock Grid.Row="1" Text="Расписание уроков" FontSize="16" FontWeight="Bold" Margin="0,0,0,10" />
+        <TextBlock Grid.Row="1" Text="Расписание уроков" FontSize="16" FontWeight="SemiBold" Margin="0,0,0,8"/>
 
         <!-- Таблица расписания -->
-        <DataGrid Grid.Row="2" ItemsSource="{Binding Schedules}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedSchedule}">
+        <DataGrid Grid.Row="2" ItemsSource="{Binding Schedules}" AutoGenerateColumns="False" CanUserAddRows="False" CanUserDeleteRows="False" IsReadOnly="True" SelectionMode="Single" SelectedItem="{Binding SelectedSchedule}" Style="{StaticResource DataGridStyle}" ColumnHeaderStyle="{StaticResource DataGridColumnHeaderStyle}">
             <DataGrid.Columns>
-                <DataGridTextColumn Header="№ урока" Binding="{Binding LessonNumber}" Width="80" />
+                <DataGridTextColumn Header="№ урока" Binding="{Binding LessonNumber}" Width="80"/>
                 <DataGridTemplateColumn Header="Понедельник" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" Padding="4"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Вторник" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" Padding="4"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Среда" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" Padding="4"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Четверг" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" Padding="4"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
                 <DataGridTemplateColumn Header="Пятница" Width="*">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding Subject.SubjectName}" TextWrapping="Wrap" Padding="4"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                 </DataGridTemplateColumn>
@@ -78,10 +140,10 @@
         </DataGrid>
 
         <!-- Кнопки управления -->
-        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Добавить" Command="{Binding AddScheduleCommand}" Width="100" Margin="0,0,10,0" />
-            <Button Content="Редактировать" Command="{Binding EditScheduleCommand}" CommandParameter="{Binding SelectedSchedule}" Width="100" Margin="0,0,10,0" IsEnabled="{Binding HasSelectedSchedule}" />
-            <Button Content="Удалить" Command="{Binding DeleteScheduleCommand}" CommandParameter="{Binding SelectedSchedule}" Width="100" IsEnabled="{Binding HasSelectedSchedule}" />
+        <StackPanel Grid.Row="3" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,8,0,0">
+            <Button Content="Добавить" Command="{Binding AddScheduleCommand}" Width="100" Style="{StaticResource PrimaryButtonStyle}"/>
+            <Button Content="Редактировать" Command="{Binding EditScheduleCommand}" CommandParameter="{Binding SelectedSchedule}" Width="100" Style="{StaticResource EditButtonStyle}" IsEnabled="{Binding HasSelectedSchedule}"/>
+            <Button Content="Удалить" Command="{Binding DeleteScheduleCommand}" CommandParameter="{Binding SelectedSchedule}" Width="100" Style="{StaticResource DeleteButtonStyle}" IsEnabled="{Binding HasSelectedSchedule}"/>
         </StackPanel>
     </Grid>
 </Window>

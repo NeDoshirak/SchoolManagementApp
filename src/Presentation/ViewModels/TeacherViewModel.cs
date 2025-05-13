@@ -111,6 +111,18 @@ namespace Presentation.ViewModels
                     }
                 });
             };
+
+            _dataChangeNotifier.TeacherSubjectChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadTeachers();
+                    if (SelectedTeacher != null)
+                    {
+                        SelectedTeacher = Teachers.FirstOrDefault(t => t.TeacherId == SelectedTeacher.TeacherId);
+                    }
+                });
+            };
         }
 
         [RelayCommand]
@@ -190,6 +202,7 @@ namespace Presentation.ViewModels
                         }
                         classEntity.TeacherId = newTeacher.TeacherId;
                         _classRepository.Update(classEntity);
+                        _dataChangeNotifier.NotifyClassChanged();
                     }
 
                     _dataChangeNotifier.NotifyTeacherChanged();
@@ -282,6 +295,7 @@ namespace Presentation.ViewModels
                         var oldClass = _classRepository.GetById(oldClassId.Value);
                         oldClass.TeacherId = null;
                         _classRepository.Update(oldClass);
+                        _dataChangeNotifier.NotifyClassChanged();
                     }
 
                     if (teacher.ClassId.HasValue)
@@ -294,6 +308,7 @@ namespace Presentation.ViewModels
                         }
                         newClass.TeacherId = teacher.TeacherId;
                         _classRepository.Update(newClass);
+                        _dataChangeNotifier.NotifyClassChanged();
                     }
 
                     _teacherRepository.Update(teacher);
@@ -325,6 +340,7 @@ namespace Presentation.ViewModels
                         var classEntity = _classRepository.GetById(teacher.ClassId.Value);
                         classEntity.TeacherId = null;
                         _classRepository.Update(classEntity);
+                        _dataChangeNotifier.NotifyClassChanged();
                     }
                     _teacherRepository.Delete(teacher.TeacherId);
                     _dataChangeNotifier.NotifyTeacherChanged();

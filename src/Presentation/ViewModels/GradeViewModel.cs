@@ -51,6 +51,7 @@ namespace Presentation.ViewModels
 
             LoadGrades();
             LoadTeachers();
+            LoadSubjects();
             SubscribeToChanges();
 
             PropertyChanged += (s, e) =>
@@ -72,6 +73,11 @@ namespace Presentation.ViewModels
             Teachers = new ObservableCollection<Teacher>(_teacherRepository.GetAll());
         }
 
+        private void LoadSubjects()
+        {
+            Subjects = new ObservableCollection<Subject>(_subjectRepository.GetAll());
+        }
+
         private void SubscribeToChanges()
         {
             _dataChangeNotifier.GradeChanged += () =>
@@ -83,6 +89,57 @@ namespace Presentation.ViewModels
                     if (prevSelectedId.HasValue)
                     {
                         SelectedGrade = Grades.FirstOrDefault(g => g.GradeId == prevSelectedId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.StudentChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadGrades();
+                    if (SelectedGrade != null)
+                    {
+                        SelectedGrade = Grades.FirstOrDefault(g => g.GradeId == SelectedGrade.GradeId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.SubjectChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadSubjects();
+                    LoadGrades();
+                    if (SelectedGrade != null)
+                    {
+                        SelectedGrade = Grades.FirstOrDefault(g => g.GradeId == SelectedGrade.GradeId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.TeacherChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadTeachers();
+                    LoadSubjects();
+                    LoadGrades();
+                    if (SelectedGrade != null)
+                    {
+                        SelectedGrade = Grades.FirstOrDefault(g => g.GradeId == SelectedGrade.GradeId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.QuarterChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadGrades();
+                    if (SelectedGrade != null)
+                    {
+                        SelectedGrade = Grades.FirstOrDefault(g => g.GradeId == SelectedGrade.GradeId);
                     }
                 });
             };

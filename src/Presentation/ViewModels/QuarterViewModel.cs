@@ -81,6 +81,32 @@ namespace Presentation.ViewModels
                     }
                 });
             };
+
+            _dataChangeNotifier.ScheduleChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadQuarters();
+                    if (SelectedQuarter != null)
+                    {
+                        SelectedQuarter = Quarters.FirstOrDefault(q => q.QuarterId == SelectedQuarter.QuarterId);
+                        UpdateQuarterDetails();
+                    }
+                });
+            };
+
+            _dataChangeNotifier.GradeChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadQuarters();
+                    if (SelectedQuarter != null)
+                    {
+                        SelectedQuarter = Quarters.FirstOrDefault(q => q.QuarterId == SelectedQuarter.QuarterId);
+                        UpdateQuarterDetails();
+                    }
+                });
+            };
         }
 
         [RelayCommand]
@@ -125,9 +151,9 @@ namespace Presentation.ViewModels
                     MessageBox.Show("Учебный год не может быть пустым.", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
-                if (!System.Text.RegularExpressions.Regex.IsMatch(academicYearBox.Text, @"^\d{4}/\d{4}$"))
+                if (!System.Text.RegularExpressions.Regex.IsMatch(academicYearBox.Text, @"^\d{4}-\d{4}$"))
                 {
-                    MessageBox.Show("Учебный год должен быть в формате ГГГГ/ГГГГ (например, 2024/2025).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Учебный год должен быть в формате ГГГГ-ГГГГ (например, 2024-2025).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 
@@ -181,7 +207,7 @@ namespace Presentation.ViewModels
 
             stackPanel.Children.Add(new TextBlock { Text = "Номер четверти:", FontWeight = FontWeights.Bold });
             stackPanel.Children.Add(numberComboBox);
-            stackPanel.Children.Add(new TextBlock { Text = "Учебный год (например, 2024/2025):", FontWeight = FontWeights.Bold });
+            stackPanel.Children.Add(new TextBlock { Text = "Учебный год (например, 2024-2025):", FontWeight = FontWeights.Bold });
             stackPanel.Children.Add(academicYearBox);
 
             var buttonPanel = new StackPanel { Orientation = Orientation.Horizontal, HorizontalAlignment = HorizontalAlignment.Right };
@@ -205,7 +231,7 @@ namespace Presentation.ViewModels
                 }
                 if (!System.Text.RegularExpressions.Regex.IsMatch(academicYearBox.Text, @"^\d{4}-\d{4}$"))
                 {
-                    MessageBox.Show("Учебный год должен быть в формате ГГГГ/ГГГГ (например, 2024-2025).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    MessageBox.Show("Учебный год должен быть в формате ГГГГ-ГГГГ (например, 2024-2025).", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
 

@@ -86,6 +86,30 @@ namespace Presentation.ViewModels
                     }
                 });
             };
+
+            _dataChangeNotifier.TeacherChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    if (SelectedSubject != null)
+                    {
+                        UpdateSubjectDetails();
+                    }
+                });
+            };
+
+            _dataChangeNotifier.TeacherSubjectChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadSubjects();
+                    if (SelectedSubject != null)
+                    {
+                        SelectedSubject = Subjects.FirstOrDefault(s => s.SubjectId == SelectedSubject.SubjectId);
+                        UpdateSubjectDetails();
+                    }
+                });
+            };
         }
 
         [RelayCommand]
@@ -265,6 +289,7 @@ namespace Presentation.ViewModels
                     SelectedSubject.TeacherSubjects = SelectedSubject.TeacherSubjects ?? new List<TeacherSubject>();
                     SelectedSubject.TeacherSubjects.Add(new TeacherSubject { TeacherId = teacher.TeacherId, Teacher = teacher });
                     _subjectRepository.Update(SelectedSubject);
+                    _dataChangeNotifier.NotifyTeacherSubjectChanged();
                     _dataChangeNotifier.NotifySubjectChanged();
 
                     Debug.WriteLine($"После добавления: SubjectId={SelectedSubject?.SubjectId}, SubjectName={SelectedSubject?.SubjectName}, TeacherName={teacherName}");
@@ -296,6 +321,7 @@ namespace Presentation.ViewModels
                     {
                         SelectedSubject.TeacherSubjects.Remove(teacherSubject);
                         _subjectRepository.Update(SelectedSubject);
+                        _dataChangeNotifier.NotifyTeacherSubjectChanged();
                         _dataChangeNotifier.NotifySubjectChanged();
                     }
                 }

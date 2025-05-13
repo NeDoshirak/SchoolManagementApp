@@ -56,7 +56,7 @@ namespace Presentation.ViewModels
         [RelayCommand]
         private void About()
         {
-            MessageBox.Show("SchoolDB Management App\nAuthor: [Your Name]\nVersion: 1.0", "About");
+            MessageBox.Show("Приложение для управления школой\nСоздатель: Макаров Егор\nгруппа 573-3", "О себе");
         }
 
         [RelayCommand]

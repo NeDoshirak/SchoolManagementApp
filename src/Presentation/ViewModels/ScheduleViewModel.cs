@@ -1,5 +1,4 @@
-﻿
-using Application.Interfaces;
+﻿using Application.Interfaces;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using SchoolDB.Application.Interfaces;
@@ -130,6 +129,45 @@ namespace Presentation.ViewModels
                     if (prevSelectedId.HasValue)
                     {
                         SelectedSchedule = Schedules.FirstOrDefault(s => s.ScheduleId == prevSelectedId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.ClassChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadClasses();
+                    LoadSchedules();
+                    if (SelectedSchedule != null)
+                    {
+                        SelectedSchedule = Schedules.FirstOrDefault(s => s.ScheduleId == SelectedSchedule.ScheduleId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.SubjectChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadSubjects();
+                    LoadSchedules();
+                    if (SelectedSchedule != null)
+                    {
+                        SelectedSchedule = Schedules.FirstOrDefault(s => s.ScheduleId == SelectedSchedule.ScheduleId);
+                    }
+                });
+            };
+
+            _dataChangeNotifier.QuarterChanged += () =>
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    LoadQuarters();
+                    LoadSchedules();
+                    if (SelectedSchedule != null)
+                    {
+                        SelectedSchedule = Schedules.FirstOrDefault(s => s.ScheduleId == SelectedSchedule.ScheduleId);
                     }
                 });
             };
@@ -387,7 +425,7 @@ namespace Presentation.ViewModels
                     schedule.LessonNumber = (int)lessonNumberComboBox.SelectedItem;
                     _scheduleRepository.Update(schedule);
                     _dataChangeNotifier.NotifyScheduleChanged();
-                    MessageBox.Show("Урок успешно обновлён в расписании.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Урок успешно обновлен.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                     window.Close();
                 }
                 catch (System.Exception ex)
@@ -405,14 +443,14 @@ namespace Presentation.ViewModels
         private void DeleteSchedule(Schedule schedule)
         {
             if (schedule == null) return;
-            if (MessageBox.Show($"Вы уверены, что хотите удалить урок {schedule.Subject.SubjectName} в {schedule.DayOfWeek} (урок {schedule.LessonNumber}) для класса {schedule.Class.Number}{schedule.Class.Letter}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
+            if (MessageBox.Show($"Вы уверены, что хотите удалить урок {schedule.Subject.SubjectName} для класса {schedule.Class.FullName}?", "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.Yes)
             {
                 try
                 {
                     _scheduleRepository.Delete(schedule.ScheduleId);
                     _dataChangeNotifier.NotifyScheduleChanged();
                     SelectedSchedule = null;
-                    MessageBox.Show("Урок успешно удалён из расписания.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
+                    MessageBox.Show("Урок успешно удален.", "Успех", MessageBoxButton.OK, MessageBoxImage.Information);
                 }
                 catch (System.Exception ex)
                 {
