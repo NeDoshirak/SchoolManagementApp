@@ -1,0 +1,57 @@
+﻿<Window x:Class="Presentation.Views.GradeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Presentation.ViewModels"
+        Title="Оценки" Height="600" Width="900"
+        Background="White">
+    <Window.Resources>
+    </Window.Resources>
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть: список оценок -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <Button Content="➕ Добавить оценку" Command="{Binding AddGradeCommand}" Margin="0,0,0,10" />
+            <ListBox ItemsSource="{Binding Grades}" SelectedItem="{Binding SelectedGrade}" Margin="0,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding Student.FullName}" FontWeight="Bold" />
+                            <TextBlock Text=" - " />
+                            <TextBlock Text="{Binding Subject.SubjectName}" />
+                            <TextBlock Text=" - " />
+                            <TextBlock Text="{Binding GradeValue}" />
+                            <Button Content="✏️" Command="{Binding DataContext.EditGradeCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="10,0,5,0" />
+                            <Button Content="🗑️" Command="{Binding DataContext.DeleteGradeCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="5,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Правая часть: детали оценки -->
+        <StackPanel Grid.Column="1" Margin="10" IsEnabled="{Binding HasSelectedGrade}">
+            <TextBlock Text="Ученик:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding SelectedGrade.Student.FullName}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Предмет:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding SelectedGrade.Subject.SubjectName}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Четверть:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock>
+                <TextBlock.Text>
+                    <MultiBinding Converter="{StaticResource QuarterDisplayConverter}">
+                        <Binding Path="SelectedGrade.Quarter.QuarterNumber" />
+                        <Binding Path="SelectedGrade.Quarter.AcademicYear" />
+                    </MultiBinding>
+                </TextBlock.Text>
+            </TextBlock>
+
+            <TextBlock Text="Оценка:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding SelectedGrade.GradeValue}" Margin="0,0,0,10" />
+        </StackPanel>
+    </Grid>
+</Window>

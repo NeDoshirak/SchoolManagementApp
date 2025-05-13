@@ -1,0 +1,31 @@
+﻿<Window x:Class="Presentation.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="SchoolDB" Height="600" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <Menu Grid.Row="0">
+            <MenuItem Header="Объекты">
+                <MenuItem Header="Классы" Command="{Binding OpenClassesCommand}" />
+                <MenuItem Header="Ученики" Command="{Binding OpenStudentsCommand}" />
+                <MenuItem Header="Учителя" Command="{Binding OpenTeachersCommand}" />
+                <MenuItem Header="Предметы" Command="{Binding OpenSubjectsCommand}" />
+                <MenuItem Header="Четверти" Command="{Binding OpenQuartersCommand}" />
+            </MenuItem>
+            <MenuItem Header="Инструменты">
+                <MenuItem Header="Выставление оценок" Command="{Binding OpenGradesCommand}" />
+                <MenuItem Header="Управление расписанием" Command="{Binding OpenSchedulesCommand}" />
+            </MenuItem>
+            <MenuItem Header="Справка">
+                <MenuItem Header="О программе" Command="{Binding AboutCommand}" />
+            </MenuItem>
+            <MenuItem Header="Выход" Command="{Binding ExitCommand}" />
+        </Menu>
+
+        <ContentControl Grid.Row="1" Margin="0,30,0,0"/>
+    </Grid>
+</Window>

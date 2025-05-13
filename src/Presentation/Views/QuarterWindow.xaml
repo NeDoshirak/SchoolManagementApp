@@ -1,0 +1,40 @@
+﻿<Window x:Class="Presentation.Views.QuarterWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Presentation.ViewModels"
+        Title="Четверти" Height="600" Width="900"
+        Background="White">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть: список четвертей -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <Button Content="➕ Добавить четверть" Command="{Binding AddQuarterCommand}" Margin="0,0,0,10" />
+            <ListBox ItemsSource="{Binding Quarters}" SelectedItem="{Binding SelectedQuarter}" Margin="0,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding QuarterNumber}" FontWeight="Bold" />
+                            <TextBlock Text=" четверть, " FontWeight="Bold" />
+                            <TextBlock Text="{Binding AcademicYear}" FontWeight="Bold" />
+                            <Button Content="✏️" Command="{Binding DataContext.EditQuarterCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="10,0,5,0" />
+                            <Button Content="🗑️" Command="{Binding DataContext.DeleteQuarterCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="5,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Правая часть: детали четверти -->
+        <StackPanel Grid.Column="1" Margin="10" IsEnabled="{Binding HasSelectedQuarter}">
+            <TextBlock Text="Номер четверти:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding SelectedQuarterNumber}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Учебный год:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBlock Text="{Binding SelectedAcademicYear}" Margin="0,0,0,10" />
+        </StackPanel>
+    </Grid>
+</Window>

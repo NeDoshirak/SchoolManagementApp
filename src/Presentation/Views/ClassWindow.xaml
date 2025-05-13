@@ -1,0 +1,54 @@
+﻿<Window x:Class="Presentation.Views.ClassWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Presentation.ViewModels"
+        Title="Классы" Height="500" Width="800"
+        Background="White">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть: список классов -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <Button Content="➕ Добавить класс" Command="{Binding AddClassCommand}" Margin="0,0,0,10" />
+            <ListBox ItemsSource="{Binding Classes}" SelectedItem="{Binding SelectedClass}" Margin="0,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding FullName}" FontWeight="Bold" />
+                            <Button Content="✏️" Command="{Binding DataContext.EditClassCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="10,0,5,0" />
+                            <Button Content="🗑️" Command="{Binding DataContext.DeleteClassCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="5,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Правая часть: детали класса -->
+        <StackPanel Grid.Column="1" Margin="10" IsEnabled="{Binding HasSelectedClass}">
+            <TextBlock Text="Номер:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBox Text="{Binding SelectedClassNumber, Mode=OneWay}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Буква:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBox Text="{Binding SelectedClassLetter, Mode=OneWay}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Классный руководитель:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBox Text="{Binding SelectedClassTeacherName, Mode=OneWay}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Ученики:" FontWeight="Bold" Margin="0,0,0,5" />
+            <Button Content="➕ Добавить ученика" Command="{Binding AddStudentToClassCommand}" Margin="0,0,0,10" />
+            <ListBox ItemsSource="{Binding SelectedClassStudents}" Margin="0,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <Image Source="{Binding PhotoPath, Converter={StaticResource ImagePathConverter}}" Width="30" Height="30" Margin="0,0,5,0" />
+                            <TextBlock Text="{Binding FullName}" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+    </Grid>
+</Window>

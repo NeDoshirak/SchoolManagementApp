@@ -1,0 +1,49 @@
+﻿<Window x:Class="Presentation.Views.SubjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Presentation.ViewModels"
+        Title="Предметы" Height="600" Width="900"
+        Background="White">
+    <Grid Margin="10">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть: список предметов -->
+        <StackPanel Grid.Column="0" Margin="0,0,10,0">
+            <Button Content="➕ Добавить предмет" Command="{Binding AddSubjectCommand}" Margin="0,0,0,10" />
+            <ListBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding SelectedSubject}" Margin="0,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding SubjectName}" FontWeight="Bold" />
+                            <Button Content="✏️" Command="{Binding DataContext.EditSubjectCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="10,0,5,0" />
+                            <Button Content="🗑️" Command="{Binding DataContext.DeleteSubjectCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="5,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Правая часть: детали предмета -->
+        <StackPanel Grid.Column="1" Margin="10" IsEnabled="{Binding HasSelectedSubject}">
+            <TextBlock Text="Название:" FontWeight="Bold" Margin="0,0,0,5" />
+            <TextBox Text="{Binding SelectedSubjectName, Mode=OneWay}" Margin="0,0,0,10" />
+
+            <TextBlock Text="Преподаватели:" FontWeight="Bold" Margin="0,0,0,5" />
+            <ListBox ItemsSource="{Binding SelectedSubjectTeachers}" Margin="0,0,0,10">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="5">
+                            <TextBlock Text="{Binding FullName}" />
+                            <Button Content="❌" Command="{Binding DataContext.RemoveTeacherCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Margin="5,0" />
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Content="Добавить преподавателя" Command="{Binding AddTeacherCommand}" Margin="0,0,0,10" />
+        </StackPanel>
+    </Grid>
+</Window>

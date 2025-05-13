@@ -1,0 +1,82 @@
+## Build results
+bin/
+obj/
+[Bb]uild/
+[Ll]og/
+[Ll]ogs/
+TestResults/
+*.log
+
+## User-specific files
+*.user
+*.userosscache
+*.suo
+*.sln.docstates
+
+## Rider
+.idea/
+*.sln.iml
+
+## VS Code
+.vscode/
+
+## Visual Studio working folder
+.vs/
+.vscode/
+
+## DotCover
+.idea/
+*.dotCover
+
+## Resharper
+_ReSharper*/
+*.[Rr]e[Ss]harper
+*.DotSettings.user
+
+## NuGet
+*.nupkg
+*.snupkg
+.nuget/
+packages/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# Uncomment if you use static analysis tools
+# *.ruleset
+# *.editorconfig
+
+## Azure Pipelines
+.azdo/
+
+## Backup & Temporary files
+*.bak
+*.tmp
+*.temp
+*.~*
+*.swp
+
+## OS-generated files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+## Publish
+publish/
+app.publish/
+
+## Coverage Reports
+coverage/
+coverage*.json
+lcov.info
+*.lcov
+
+## Entity Framework
+Migrations/
+
+## secrets / config (если используете)
+secrets.json
+appsettings.Development.json
+appsettings.Local.json

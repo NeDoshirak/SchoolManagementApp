@@ -1,0 +1,59 @@
+﻿<Window x:Class="SchoolManagementApp.Presentation.Views.StudentWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SchoolManagementApp.Presentation.Views"
+        mc:Ignorable="d"
+        Title="StudentWindow" Height="450" Width="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="3*" />
+        </Grid.ColumnDefinitions>
+        <!-- Левая часть: DataGrid -->
+        <DataGrid x:Name="StudentDataGrid" 
+                  ItemsSource="{Binding Students}" 
+                  AutoGenerateColumns="False" 
+                  SelectionChanged="StudentDataGrid_SelectionChanged"
+                  Margin="10">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ФИО" Binding="{Binding FullName}" Width="*" />
+                <DataGridTemplateColumn Header="Фото" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Image Source="{Binding PhotoPath}" Height="50" Width="50" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTextColumn Header="Класс" Binding="{Binding ClassId}" Width="*" />
+                <DataGridTemplateColumn Header="Действия" Width="*">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <Button Content="🗑" 
+                                        Command="{Binding DataContext.DeleteCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding StudentId}" 
+                                        Width="30" Height="30" Margin="2" />
+                                <Button Content="✏" 
+                                        Command="{Binding DataContext.EditCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" 
+                                        CommandParameter="{Binding StudentId}" 
+                                        Width="30" Height="30" Margin="2" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
+        <!-- Правая часть: Детали студента (только чтение) -->
+        <StackPanel Grid.Column="1" Margin="10">
+            <TextBlock Text="ФИО:" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedStudent.FullName}" Margin="0,0,0,10" />
+            <TextBlock Text="Фото:" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedStudent.PhotoPath}" Margin="0,0,0,10" />
+            <TextBlock Text="Класс:" FontWeight="Bold" />
+            <TextBlock Text="{Binding SelectedStudent.ClassId}" Margin="0,0,0,10" />
+            <Image Source="{Binding SelectedStudent.PhotoPath}" Height="150" Width="150" Margin="0,0,0,10" />
+        </StackPanel>
+    </Grid>
+</Window>
