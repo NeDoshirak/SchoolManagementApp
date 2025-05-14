@@ -1,0 +1,99 @@
+﻿<Window x:Class="Presentation.Views.SubjectWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:Presentation.ViewModels"
+        Title="Предметы" Height="600" Width="900">
+    <Window.Resources>
+        <!-- Цвета -->
+        <SolidColorBrush x:Key="WindowBackground" Color="#F8F8F8"/>
+        <SolidColorBrush x:Key="PrimaryButtonBackground" Color="#0078D4"/>
+        <SolidColorBrush x:Key="PrimaryButtonForeground" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="EditButtonBackground" Color="#D0D0D0"/>
+        <SolidColorBrush x:Key="DeleteButtonBackground" Color="#D13438"/>
+        <SolidColorBrush x:Key="DeleteButtonForeground" Color="#FFFFFF"/>
+
+        <!-- Стили -->
+        <Style x:Key="PrimaryButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource PrimaryButtonForeground}"/>
+            <Setter Property="Padding" Value="8,4"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="EditButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource EditButtonBackground}"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Margin" Value="8,0,4,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="DeleteButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource DeleteButtonBackground}"/>
+            <Setter Property="Foreground" Value="{StaticResource DeleteButtonForeground}"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Margin" Value="4,0,0,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+
+        <Style x:Key="HeaderTextBlockStyle" TargetType="TextBlock">
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Margin" Value="0,0,0,4"/>
+        </Style>
+
+        <Style x:Key="TextBoxStyle" TargetType="TextBox">
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+
+        <Style x:Key="ListBoxStyle" TargetType="ListBox">
+            <Setter Property="BorderBrush" Value="#E0E0E0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="12" Background="{StaticResource WindowBackground}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Левая часть: список предметов -->
+        <StackPanel Grid.Column="0" Margin="0,0,8,0">
+            <Button Content="➕ Добавить предмет" Command="{Binding AddSubjectCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+            <ListBox ItemsSource="{Binding Subjects}" SelectedItem="{Binding SelectedSubject}" Style="{StaticResource ListBoxStyle}">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="4">
+                            <TextBlock Text="{Binding SubjectName}" FontWeight="SemiBold"/>
+                            <Button Content="✏️" Command="{Binding DataContext.EditSubjectCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Style="{StaticResource EditButtonStyle}"/>
+                            <Button Content="🗑️" Command="{Binding DataContext.DeleteSubjectCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Style="{StaticResource DeleteButtonStyle}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </StackPanel>
+
+        <!-- Правая часть: детали предмета -->
+        <StackPanel Grid.Column="1" Margin="8,0" IsEnabled="{Binding HasSelectedSubject}">
+            <TextBlock Text="Название:" Style="{StaticResource HeaderTextBlockStyle}"/>
+            <TextBox Text="{Binding SelectedSubjectName, Mode=OneWay}" Style="{StaticResource TextBoxStyle}"/>
+
+            <TextBlock Text="Преподаватели:" Style="{StaticResource HeaderTextBlockStyle}"/>
+            <ListBox ItemsSource="{Binding SelectedSubjectTeachers}" Style="{StaticResource ListBoxStyle}" Margin="0,0,0,8">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <StackPanel Orientation="Horizontal" Margin="4">
+                            <TextBlock Text="{Binding FullName}"/>
+                            <Button Content="❌" Command="{Binding DataContext.RemoveTeacherCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Style="{StaticResource DeleteButtonStyle}"/>
+                        </StackPanel>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+
+            <Button Content="Добавить преподавателя" Command="{Binding AddTeacherCommand}" Style="{StaticResource PrimaryButtonStyle}"/>
+        </StackPanel>
+    </Grid>
+</Window>
