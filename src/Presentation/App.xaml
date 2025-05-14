@@ -7,5 +7,6 @@
     <Application.Resources>
         <converters:ImagePathConverter x:Key="ImagePathConverter"/>
         <converters:QuarterDisplayConverter x:Key="QuarterDisplayConverter" />
+        <converters:QuarterDisplayConverter x:Key="ActiveStatusToBrushConverter" />
     </Application.Resources>
 </Application>

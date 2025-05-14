@@ -102,7 +102,7 @@ namespace Infrastructure.Repositories
                         TeacherSubjects = new List<TeacherSubject>()
                     };
                 }
-                if (!reader.IsDBNull(2)) // ts_subject_id
+                if (!reader.IsDBNull(2)) 
                 {
                     var teacherSubject = new TeacherSubject
                     {
@@ -129,20 +129,18 @@ namespace Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            // Обновляем предмет
             using var updateCommand = new NpgsqlCommand(
                 "UPDATE subject SET subject_name = @subject_name WHERE subject_id = @id", connection);
             updateCommand.Parameters.AddWithValue("@subject_name", entity.SubjectName);
             updateCommand.Parameters.AddWithValue("@id", entity.SubjectId);
             updateCommand.ExecuteNonQuery();
 
-            // Удаляем старые связи
             using var deleteCommand = new NpgsqlCommand(
                 "DELETE FROM teacher_subject WHERE subject_id = @id", connection);
             deleteCommand.Parameters.AddWithValue("@id", entity.SubjectId);
             deleteCommand.ExecuteNonQuery();
 
-            // Добавляем новые связи
+
             if (entity.TeacherSubjects != null)
             {
                 using var insertCommand = new NpgsqlCommand(
@@ -164,23 +162,19 @@ namespace Infrastructure.Repositories
             using var connection = new NpgsqlConnection(_connectionString);
             connection.Open();
 
-            // Начинаем транзакцию
             using var transaction = connection.BeginTransaction();
             try
             {
-                // Удаляем связи из teacher_subject
                 using var deleteLinkCommand = new NpgsqlCommand(
                     "DELETE FROM teacher_subject WHERE subject_id = @id", connection, transaction);
                 deleteLinkCommand.Parameters.AddWithValue("@id", id);
                 deleteLinkCommand.ExecuteNonQuery();
 
-                // Удаляем связи из schedule
                 using var deleteScheduleCommand = new NpgsqlCommand(
                     "DELETE FROM schedule WHERE subject_id = @id", connection, transaction);
                 deleteScheduleCommand.Parameters.AddWithValue("@id", id);
                 deleteScheduleCommand.ExecuteNonQuery();
 
-                // Удаляем предмет
                 using var deleteCommand = new NpgsqlCommand(
                     "DELETE FROM subject WHERE subject_id = @id", connection, transaction);
                 deleteCommand.Parameters.AddWithValue("@id", id);

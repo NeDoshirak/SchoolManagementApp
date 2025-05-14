@@ -16,5 +16,8 @@ namespace SchoolDB.Domain.Entities
 
         public Class Class { get; set; }
         public ICollection<Grade> Grades { get; set; }
+        public double? AverageGrade { get; set; }
+
+
     }
 }

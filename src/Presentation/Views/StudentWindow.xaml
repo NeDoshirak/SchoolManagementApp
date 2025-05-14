@@ -71,6 +71,7 @@
                             <StackPanel>
                                 <TextBlock Text="{Binding FullName}" FontWeight="SemiBold"/>
                                 <TextBlock Text="{Binding Class.FullName}" Margin="0,2,0,0"/>
+                                <TextBlock Text="{Binding AverageGrade}" Margin="0,2,0,0"/>
                             </StackPanel>
                             <Button Content="✏️" Command="{Binding DataContext.EditStudentCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Style="{StaticResource EditButtonStyle}"/>
                             <Button Content="🗑️" Command="{Binding DataContext.DeleteStudentCommand, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding}" Style="{StaticResource DeleteButtonStyle}"/>
@@ -87,6 +88,9 @@
 
             <TextBlock Text="Класс:" Style="{StaticResource HeaderTextBlockStyle}"/>
             <TextBox Text="{Binding SelectedStudent.Class.FullName, Mode=OneWay}" Style="{StaticResource TextBoxStyle}"/>
+
+            <TextBlock Text="Средний балл по редметам:" Style="{StaticResource HeaderTextBlockStyle}"/>
+            <TextBox Text="{Binding SelectedStudent.AverageGrade, Mode=OneWay}" Style="{StaticResource TextBoxStyle}"/>
 
             <TextBlock Text="Фото:" Style="{StaticResource HeaderTextBlockStyle}"/>
             <TextBox Text="{Binding SelectedStudent.PhotoPath, Mode=OneWay}" Style="{StaticResource TextBoxStyle}"/>

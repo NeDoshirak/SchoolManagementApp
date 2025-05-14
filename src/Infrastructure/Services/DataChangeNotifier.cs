@@ -13,7 +13,6 @@ namespace Infrastructure.Services
         public event Action GradeChanged;
         public event Action QuarterChanged;
         public event Action ScheduleChanged;
-        public event Action ClassTeacherChanged;
         public event Action TeacherSubjectChanged;
 
         public void NotifyClassChanged() => ClassChanged?.Invoke();
@@ -23,7 +22,6 @@ namespace Infrastructure.Services
         public void NotifyGradeChanged() => GradeChanged?.Invoke();
         public void NotifyQuarterChanged() => QuarterChanged?.Invoke();
         public void NotifyScheduleChanged() => ScheduleChanged?.Invoke();
-        public void NotifyClassTeacherChanged() => ClassTeacherChanged?.Invoke();
         public void NotifyTeacherSubjectChanged() => TeacherSubjectChanged?.Invoke();
     }
 }

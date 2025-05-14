@@ -11,7 +11,6 @@ namespace Application.Interfaces
         event Action GradeChanged;
         event Action QuarterChanged;
         event Action ScheduleChanged;
-        event Action ClassTeacherChanged;
         event Action TeacherSubjectChanged;
 
         void NotifyClassChanged();
@@ -21,7 +20,6 @@ namespace Application.Interfaces
         void NotifyGradeChanged();
         void NotifyQuarterChanged();
         void NotifyScheduleChanged();
-        void NotifyClassTeacherChanged();
         void NotifyTeacherSubjectChanged();
     }
 }

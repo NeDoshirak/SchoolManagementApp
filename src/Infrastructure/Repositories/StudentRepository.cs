@@ -25,7 +25,7 @@ namespace Infrastructure.Repositories
 
             command.Parameters.AddWithValue("@full_name", entity.FullName);
             command.Parameters.AddWithValue("@class_id", entity.ClassId);
-            command.Parameters.AddWithValue("@photo_path", entity.PhotoPath);
+            command.Parameters.AddWithValue("@photo_path", entity.PhotoPath ?? (object)DBNull.Value);
 
             connection.Open();
             command.ExecuteNonQuery();
@@ -45,14 +45,20 @@ namespace Infrastructure.Repositories
             using var reader = command.ExecuteReader();
             if (reader.Read())
             {
-                return new Student
+                var student = new Student
                 {
                     StudentId = reader.GetInt32(0),
                     FullName = reader.GetString(1),
                     ClassId = reader.GetInt32(2),
-                    PhotoPath = reader.GetString(3),
+                    PhotoPath = reader.IsDBNull(3) ? null : reader.GetString(3),
                     Class = new Class { ClassId = reader.GetInt32(2), Number = reader.GetInt32(4), Letter = reader.GetString(5) }
                 };
+                reader.Close(); // Close reader before new query
+
+                // Calculate average grade
+                student.AverageGrade = CalculateAverageGrade(id, connection);
+
+                return student;
             }
 
             return null;
@@ -69,7 +75,6 @@ namespace Infrastructure.Repositories
 
             connection.Open();
             using var reader = command.ExecuteReader();
-
             while (reader.Read())
             {
                 result.Add(new Student
@@ -77,9 +82,15 @@ namespace Infrastructure.Repositories
                     StudentId = reader.GetInt32(0),
                     FullName = reader.GetString(1),
                     ClassId = reader.GetInt32(2),
-                    PhotoPath = reader.GetString(3),
+                    PhotoPath = reader.IsDBNull(3) ? null : reader.GetString(3),
                     Class = new Class { ClassId = reader.GetInt32(2), Number = reader.GetInt32(4), Letter = reader.GetString(5) }
                 });
+            }
+            reader.Close(); 
+
+            foreach (var student in result)
+            {
+                student.AverageGrade = CalculateAverageGrade(student.StudentId, connection);
             }
 
             return result;
@@ -93,7 +104,7 @@ namespace Infrastructure.Repositories
 
             command.Parameters.AddWithValue("@full_name", entity.FullName);
             command.Parameters.AddWithValue("@class_id", entity.ClassId);
-            command.Parameters.AddWithValue("@photo_path", entity.PhotoPath);
+            command.Parameters.AddWithValue("@photo_path", entity.PhotoPath ?? (object)DBNull.Value);
             command.Parameters.AddWithValue("@id", entity.StudentId);
 
             connection.Open();
@@ -111,6 +122,21 @@ namespace Infrastructure.Repositories
             connection.Open();
             command.ExecuteNonQuery();
             _notifier.NotifyStudentChanged();
+        }
+
+        private double? CalculateAverageGrade(int studentId, NpgsqlConnection connection)
+        {
+            using var command = new NpgsqlCommand(
+                "SELECT AVG(grade_value) FROM grade WHERE student_id = @student_id", connection);
+            command.Parameters.AddWithValue("@student_id", studentId);
+
+            var result = command.ExecuteScalar();
+            if (result == DBNull.Value)
+            {
+                return null;
+            }
+
+            return Convert.ToDouble(result); 
         }
     }
 }
