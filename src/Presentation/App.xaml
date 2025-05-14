@@ -1,0 +1,12 @@
+﻿<Application x:Class="Presentation.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:Presentation"
+             xmlns:converters="clr-namespace:Presentation.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <converters:ImagePathConverter x:Key="ImagePathConverter"/>
+        <converters:QuarterDisplayConverter x:Key="QuarterDisplayConverter" />
+        <converters:QuarterDisplayConverter x:Key="ActiveStatusToBrushConverter" />
+    </Application.Resources>
+</Application>
